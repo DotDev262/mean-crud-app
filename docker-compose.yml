@@ -4,8 +4,6 @@ services:
   backend:
     build: ./backend
     container_name: mean-backend
-    ports:
-      - "8080:8080"
     environment:
       - MONGO_URI=mongodb://mongo:27017/meanapp
     depends_on:
@@ -24,7 +22,7 @@ services:
       - mean-network
 
   mongo:
-    image: mongo:6
+    image: mongo:8.2
     container_name: mean-mongo
     ports:
       - "27017:27017"
