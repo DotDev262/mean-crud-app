@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: mean-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/meanapp
+    depends_on:
+      - mongo
+    networks:
+      - mean-network
+
+  frontend:
+    build: ./frontend
+    container_name: mean-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - mean-network
+
+  mongo:
+    image: mongo:6
+    container_name: mean-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mean-network
+
+networks:
+  mean-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
