@@ -398,7 +398,9 @@ docker compose up -d
 
 ## GitHub Actions Execution Screenshots
 
-### 1. CI/CD Pipeline Trigger
+### 1. CI/CD Pipeline Configuration
+
+![CI/CD Workflow](./screenshots/cicd-workflow.png)
 
 When you push to the `main` branch, the workflow automatically triggers:
 
@@ -412,6 +414,8 @@ When you push to the `main` branch, the workflow automatically triggers:
 ```
 
 ### 2. Docker Image Build & Push
+
+![Build and Push](./screenshots/build-push.png)
 
 ```
 ✓ Build backend image
@@ -427,12 +431,19 @@ When you push to the `main` branch, the workflow automatically triggers:
 
 ### 3. VM Deployment
 
-```
-✓ Connect to VM via SSH
-✓ Pull latest images
-✓ Restart containers
-✓ Deployment complete
-```
+The deployment connects to your GCP VM via SSH and runs docker compose to pull and start the containers.
+
+### 4. GCP Infrastructure
+
+![GCP Console](./screenshots/gcp-console.png)
+
+Shows the GCP Compute Engine VM and firewall configuration.
+
+### 5. Application Working UI
+
+![Working UI](./screenshots/Working-UI.png)
+
+The MEAN stack CRUD application running in production.
 
 ---
 
