@@ -19,19 +19,39 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }} # Corrected secret name
+          password: ${{ secrets.DOCKER_PASSWORD }} # Corrected secret name
       
       - name: Build and push backend
         uses: docker/build-push-action@v5
         with:
           context: ./backend
           push: true
-          tags: dotdev262/mean-backend:latest,dotdev262/mean-backend:v1
+          tags: dotdev262/mean-backend:latest,dotdev262/mean-backend:v1,dotdev262/mean-backend:${{ github.sha }}
       
       - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           push: true
-          tags: dotdev262/mean-frontend:latest,dotdev262/mean-frontend:v1
+          tags: dotdev262/mean-frontend:latest,dotdev262/mean-frontend:v1,dotdev262/mean-frontend:${{ github.sha }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push # This job depends on the build-and-push job completing successfully
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to VM
+        env:
+          VM_HOST: ${{ secrets.VM_HOST }}
+          VM_APP_PATH: /home/aryan/Code/Projects/mean-app/crud-dd-task-mean-app/ # User provided path
+        run: |
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USERNAME_ON_VM }}@${{ env.VM_HOST }} "cd ${{ env.VM_APP_PATH }} && docker compose pull && docker compose up -d"
