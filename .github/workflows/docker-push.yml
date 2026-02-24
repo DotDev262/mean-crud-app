@@ -51,8 +51,6 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy to VM
-        env:
-          VM_HOST: ${{ secrets.VM_HOST }}
-          VM_APP_PATH: /home/aryan/Code/Projects/mean-app/crud-dd-task-mean-app/ # User provided path
         run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USERNAME_ON_VM }}@${{ env.VM_HOST }} "cd ${{ env.VM_APP_PATH }} && docker compose pull && docker compose up -d"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME_ON_VM }}@${{ secrets.VM_HOST }} \
+            "cd /home/${{ secrets.SSH_USERNAME_ON_VM }} && docker compose pull && docker compose up -d"
