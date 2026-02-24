@@ -38,6 +38,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    environment: DockerHub Deploy # Associate this job with the DockerHub Deploy environment
     needs: build-and-push # This job depends on the build-and-push job completing successfully
     
     steps:
